@@ -7,12 +7,12 @@ const ExpenseCard = ({ expense, setExpenses }) => {
     }
 
     return (
-        <tr >
-            <td>{expense.title}</td>
-            <td>{expense.category}</td>
-            <td>{expense.amount}</td>
-            <td><button onClick={handleDelete} className='delete-button'>Delete</button></td>
-        </tr>
+        <div className='expense-card'>
+            <p>{expense.title}</p>
+            <p>{expense.category}</p>
+            <p>{expense.amount}</p>
+            <button onClick={handleDelete} className='delete-button'>Delete</button>
+        </div>
     )
 }
 

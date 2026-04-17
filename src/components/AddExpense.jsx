@@ -1,9 +1,12 @@
 import { useForm } from "react-hook-form";
 import { expenseSchema } from "../schemas/expense.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Input from './ui/Input';
+import Select from "./ui/Select";
+import Button from "./ui/Button";
 
 function AddExpense({ setExpenses, filters }) {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: zodResolver(expenseSchema) });
+    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm({ resolver: zodResolver(expenseSchema) });
 
     const onSubmit = (data) => {
         console.log(data);
@@ -11,33 +14,45 @@ function AddExpense({ setExpenses, filters }) {
         reset();
     };
 
+    const category = watch("category");
+    const title = watch("title");
+    const amount = watch("amount");
+    const date = watch("date");
+
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="add-form">
-                <div className="input-group">
-                    <input {...register("title")} placeholder="Title" className="form-input" />
-                    {errors.title && <p className="error-message">{errors.title.message}</p>}
-                </div>
-                <div className="input-group">
-                    <input {...register("amount")} type="number" placeholder="Amount" step="0.01" className="form-input" />
-                    {errors.amount && <p className="error-message">{errors.amount.message}</p>}
-                </div>
-                <div className="input-group">
-                    <input {...register("date")} type="date" className="form-input" />
-                    {errors.date && <p className="error-message">{errors.date.message}</p>}
-                </div>
-                <select {...register("category")} id="category" className="form-input">
-                    {filters.map((filter) => (
-                        <option key={filter} value={filter}>
-                            {filter}
-                        </option>
-                    ))}
-                </select>
-                <button type="submit" className="submit-button">Add Expense</button>
+                <Input
+                    type="text"
+                    placeholder="Title"
+                    {...register("title")}
+                    label="Title"
+                    name="title"
+                    errors={errors}
+                />
+                <Input
+                    type="number"
+                    placeholder="Amount"
+                    {...register("amount")}
+                    label="Amount"
+                    step="0.01"
+                    name="amount"
+                    errors={errors}
+                />
+                <Input
+                    type="date"
+                    {...register("date")}
+                    label="Date"
+                    name="date"
+                    errors={errors}
+                />
+                <Select options={filters} {...register("category")} label="Category" errors={errors} />
+                <Button title="Add Expense" onClick={handleSubmit} />
             </form>
         </>
     )
 }
+
 
 
 export default AddExpense

@@ -1,4 +1,4 @@
-import { set } from "react-hook-form";
+import Input from "./ui/Input";
 
 function Search({ expenses, setFilteredExpenses, setIsFiltering }) {
     const handleSearch = (e) => {
@@ -15,7 +15,12 @@ function Search({ expenses, setFilteredExpenses, setIsFiltering }) {
 
     return (
         <>
-            <input type="text" name="search" id="search" placeholder="Search expenses" onChange={handleSearch} className="search-bar" autoComplete="off" />
+            <Input
+                type="text"
+                placeholder="Search expenses"
+                onChange={handleSearch}
+                label="Search"
+            />
         </>
     )
 }

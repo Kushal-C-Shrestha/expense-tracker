@@ -1,4 +1,5 @@
 import React from 'react'
+import Select from './ui/Select';
 
 const Filter = ({ filters, setFilteredExpenses, setIsFiltering, expenses }) => {
     const handleFilter = (e) => {
@@ -14,14 +15,7 @@ const Filter = ({ filters, setFilteredExpenses, setIsFiltering, expenses }) => {
         console.log(selectedFilter);
     }
     return (
-        <select onChange={handleFilter} className='filter-dropdown'>
-            <option value="All">All</option>
-            {filters.map((filter) => (
-                <option key={filter} value={filter}>
-                    {filter}
-                </option>
-            ))}
-        </select>
+        <Select options={["All", ...filters]} onChange={handleFilter} label="Filter by category" />
     )
 }
 
