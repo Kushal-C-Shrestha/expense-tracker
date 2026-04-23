@@ -1,0 +1,27 @@
+.input {
+    border:none;
+    width:100%;
+}
+
+.input:focus {
+    outline: none;
+}
+
+.input-group{
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+
+.input-wrapper{
+    display: flex;
+    border: 1px solid #ccc;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.input--search{
+    width: 250px;
+}
