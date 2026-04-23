@@ -1,0 +1,36 @@
+.expense__form{
+    position:fixed;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border:1px solid #ccc;
+    padding:2rem;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.form__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+
+.form__group{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.form__row{
+    display: flex;
+    gap:24px
+}
+
+.form__actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
