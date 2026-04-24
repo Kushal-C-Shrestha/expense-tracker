@@ -7,10 +7,11 @@ import Input from '../components/ui/Input/Input'
 import Select from '../components/ui/Select/Select'
 import styles from "./Home.module.css"
 import filters from '../data/filters'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 const Home = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [expenses, setExpenses] = useState([]);
+    const [expenses, setExpenses] = useLocalStorage("expenses", []);
     const [isFiltering, setIsFiltering] = useState(false);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
 
