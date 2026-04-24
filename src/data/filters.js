@@ -1,0 +1,1 @@
+export default ["Food", "Transportation", "Entertainment", "Utilities", "Healthcare", "Other"]
