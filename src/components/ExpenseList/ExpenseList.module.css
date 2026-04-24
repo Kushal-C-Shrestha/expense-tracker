@@ -1,0 +1,17 @@
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+}
+
+.expense-list__header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 1rem;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+}
+
+.expense-list__header:last-child{
+  text-align: right;
+}
