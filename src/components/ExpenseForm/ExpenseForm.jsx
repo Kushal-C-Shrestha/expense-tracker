@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { expenseSchema } from "../../schemas/expense.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,9 +12,11 @@ import styles from "./ExpenseForm.module.css"
 
 import filters from "../../data/filters";
 
-function ExpenseForm({ setExpenses, handleCloseModal }) {
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm({ resolver: zodResolver(expenseSchema) });
+import useLocalStorage from "../../hooks/useLocalStorage";
 
+
+function ExpenseForm({ setExpenses, handleCloseModal, filters, selectedExpense = { title: "", amount: "", date: "", category: "" }, setSelectedExpense, setIsFiltering }) {
+    const { register, handleSubmit, reset, formState: { errors }, watch, } = useForm({ resolver: zodResolver(expenseSchema), defaultValues: selectedExpense });
 
 
     const handleClose = () => {
@@ -21,11 +24,35 @@ function ExpenseForm({ setExpenses, handleCloseModal }) {
         handleCloseModal();
     }
 
+    const handleEdit = (data) => {
+        setExpenses(prevExpenses => prevExpenses.map(e => e.id === selectedExpense.id ? { ...data, id: selectedExpense.id } : e));
+        setSelectedExpense(null);
+        handleClose();
+        setIsFiltering(false);
+        return;
+    }
+
     const onSubmit = (data) => {
+        console.log(selectedExpense);
         console.log(data);
+        if (selectedExpense && selectedExpense.id) {
+            handleEdit(data);
+            return;
+        }
+
         setExpenses(prevExpenses => [...prevExpenses, { ...data, id: Date.now() }]);
         handleClose();
+        setIsFiltering(false);
+        return
     };
+
+    useEffect(() => {
+        if (selectedExpense) {
+            reset(selectedExpense);
+        } else {
+            reset();
+        }
+    }, [selectedExpense, reset])
 
 
     const category = watch("category");
