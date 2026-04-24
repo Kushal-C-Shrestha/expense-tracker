@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 
-import ExpenseCard from "../ExpenseCard/ExpenseCard"
 import styles from "./ExpenseList.module.css"
 
 import Table from "../ui/Table/Table"
