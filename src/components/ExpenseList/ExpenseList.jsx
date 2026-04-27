@@ -54,13 +54,35 @@ const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, set
         setIsDisabled(false)
     }, [selectedIds])
 
-
+    const mapCategoryToColor = (category) => {
+        switch (category.toLowerCase()) {
+            case "food":
+                return "red";
+                break;
+            case "transportation":
+                return "blue";
+                break;
+            case "entertainment":
+                return "green";
+                break;
+            case "utilities":
+                return "orange";
+                break;
+            case "healthcare":
+                return "purple";
+                break;
+            default:
+                return "gray";
+        }
+    }
 
     const columns = [
         { key: "select", label: "", width: "40px", render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} />, headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === data.length && data.length > 0} /> },
         { key: "title", label: "Title", width: "40%" },
         { key: "date", label: "Date", width: "20%", render: (row) => new Date(row.date).toLocaleDateString() },
-        { key: "category", label: "Category", width: "20%", render: (row) => <div className={styles["category__pill"]}>{row.category}</div> },
+        { key: "category", label: "Category", width: "20%", render: (row) => <div className="pill__container">
+            <div className={`${styles["category__pill"]} ${styles[`category__pill--${mapCategoryToColor(row.category)}`]}`}>{row.category}</div>
+        </div> },
         { key: "amount", label: "Amount", width: "20%" },
         {
             key: "actions", label: "Actions", width: "10%", render: (row) => {
