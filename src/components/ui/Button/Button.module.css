@@ -30,7 +30,7 @@
 }
 
 .button--add {
-  background-color: #007bff;
+  background-color: #0d4c90;
   color: white;
 }
 
@@ -44,4 +44,10 @@
   padding: 0;
   background-color: transparent;
   color: blue;
+}
+
+.button--clear {
+  background-color: transparent;
+  color: var(--tech-blue);
+  border: 1px solid var(--tech-blue);
 }

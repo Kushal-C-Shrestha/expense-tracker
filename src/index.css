@@ -2,8 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
-body {
-  padding: 3rem;
+  --snow: #fcf7f8ff;
+  --pale-slate: #ced3dcff;
+  --lilac-ash: #aba9c3ff;
+  --tech-blue: #275dadff;
+  --blue-slate: #5b616aff;
 }
