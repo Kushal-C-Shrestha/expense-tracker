@@ -1,17 +1,12 @@
-import { useState, useEffect } from "react"
-import Home from "./pages/Home"
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import React from "react"
+import AppRoutes from "./routes/AppRoutes"
 
 import "./App.css"
 
 function App() {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </Router>
+      <AppRoutes />
     </>
   )
 }

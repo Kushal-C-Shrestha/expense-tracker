@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import ExpenseForm from "../components/ExpenseForm/ExpenseForm"
-import ExpenseList from "../components/ExpenseList/ExpenseList"
-import Button from '../components/ui/Button/Button'
+import ExpenseForm from "../../components/ExpenseForm/ExpenseForm"
+import ExpenseList from "../../components/ExpenseList/ExpenseList"
+import Button from '../../components/ui/Button/Button'
 import { Plus, Search } from 'lucide-react'
-import Input from '../components/ui/Input/Input'
-import Select from '../components/ui/Select/Select'
+import Input from '../../components/ui/Input/Input'
+import Select from '../../components/ui/Select/Select'
 import styles from "./Home.module.css"
-import filters from '../data/filters'
-import useLocalStorage from '../hooks/useLocalStorage'
+import filters from '../../data/filters'
+import useLocalStorage from '../../hooks/useLocalStorage'
 
 const Home = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
