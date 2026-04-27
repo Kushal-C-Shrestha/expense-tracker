@@ -8,9 +8,8 @@ import Button from "../ui/Button/Button"
 import { Pencil, Trash2 } from "lucide-react"
 import { set } from "zod"
 
-const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, setSelectedExpense, selectedExpense, handleOpenModal }) => {
+const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, setSelectedExpense, selectedExpense, handleOpenModal, selectedIds, setSelectedIds }) => {
     const data = isFiltering ? filteredExpenses : expenses
-    const [selectedIds, setSelectedIds] = useState([])
 
     const [isDisabled, setIsDisabled] = useState(false)
 
