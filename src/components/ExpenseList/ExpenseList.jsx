@@ -38,6 +38,13 @@ const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, set
         });
     }
 
+    const handleSelectAll = () => {
+        if (selectedIds.length === data.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(data.map(d => d.id));
+        }
+    };
 
     useEffect(() => {
         if (selectedIds.length > 1) {
@@ -50,7 +57,7 @@ const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, set
 
 
     const columns = [
-        { key: "select", label: "", width: "40px", render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} /> },
+        { key: "select", label: "", width: "40px", render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} />, headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === data.length && data.length > 0} /> },
         { key: "title", label: "Title", width: "40%" },
         { key: "category", label: "Category", width: "30%" },
         { key: "amount", label: "Amount", width: "20%" },
