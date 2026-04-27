@@ -59,7 +59,8 @@ const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, set
     const columns = [
         { key: "select", label: "", width: "40px", render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} />, headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === data.length && data.length > 0} /> },
         { key: "title", label: "Title", width: "40%" },
-        { key: "category", label: "Category", width: "30%" },
+        { key: "date", label: "Date", width: "20%", render: (row) => new Date(row.date).toLocaleDateString() },
+        { key: "category", label: "Category", width: "20%", render: (row) => <div className={styles["category__pill"]}>{row.category}</div> },
         { key: "amount", label: "Amount", width: "20%" },
         {
             key: "actions", label: "Actions", width: "10%", render: (row) => {
@@ -77,11 +78,18 @@ const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, set
         }
     ]
 
+    const footer = {
+        columns: [
+            { key: "total", label: "Total expenses:", colspan: "4" },
+            { key: "totalAmount", label: data.reduce((total, row) => total + Number(row.amount) || 0, 0), colspan: "2" }
+        ]
+    }
+
 
 
     return (
         <>
-            <Table columns={columns} data={data} className={styles.table} />
+            <Table columns={columns} data={data} className={styles.table} footer={footer} />
         </>
     )
 }
