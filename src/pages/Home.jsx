@@ -14,6 +14,7 @@ const Home = () => {
     const [expenses, setExpenses] = useLocalStorage("expenses", []);
     const [isFiltering, setIsFiltering] = useState(false);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
+    const [selectedExpense, setSelectedExpense] = useState(null)
 
     const handleSearch = (e) => {
         const searchValue = e.target.value.toLowerCase();
@@ -48,7 +49,8 @@ const Home = () => {
         setIsOpenModal(false);
     }
 
-    useEffect(() => { console.log(expenses) }, [expenses])
+
+
     return (
         <>
             <h1>Welcome</h1>
@@ -61,10 +63,10 @@ const Home = () => {
                         <Button text="Add Expense" icon={<Plus />} onClick={() => setIsOpenModal(true)} variant='add' />
                     </div>
                 </div>
-                <ExpenseList expenses={expenses} filteredExpenses={filteredExpenses} isFiltering={isFiltering} setExpenses={setExpenses} />
+                <ExpenseList expenses={expenses} filteredExpenses={filteredExpenses} isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} />
                 {isOpenModal && (
                     <div className={styles["overlay"]} onClick={handleCloseModal}>
-                        <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} />
+                        <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} setIsFiltering={setIsFiltering} />
                     </div>)
                 }
             </div>
