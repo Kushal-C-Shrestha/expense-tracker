@@ -9,12 +9,17 @@
 }
 
 .button:disabled {
-  background-color: rgb(165, 165, 165);
+  color: rgb(165, 165, 165);
   cursor: not-allowed;
 }
 
 .button--save {
   background-color: #4caf50;
+  color: white;
+}
+
+.button--save:disabled {
+  background-color: rgb(199, 199, 199);
   color: white;
 }
 
