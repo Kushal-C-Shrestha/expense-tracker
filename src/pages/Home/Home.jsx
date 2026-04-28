@@ -16,32 +16,49 @@ const Home = () => {
     const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [selectedExpense, setSelectedExpense] = useState(null)
     const [selectedIds, setSelectedIds] = useState([])
+    const [appliedFilter, setAppliedFilter] = useState({
+        search: "",
+        category: "All",
+        sort: ""
+    });
 
+    useEffect(() => {
+        console.log(appliedFilter);
+        let updated = [...expenses];
 
-    const handleSearch = (e) => {
-        const searchValue = e.target.value.toLowerCase();
-        const filteredExpenses = expenses.filter(expense => expense.title.toLowerCase().includes(searchValue));
-        if (searchValue === "") {
-            setFilteredExpenses([]);
-            setIsFiltering(false);
-            return;
+        if (appliedFilter.search) {
+            const searchValue = appliedFilter.search.toLowerCase();
+            updated = expenses.filter(expense => expense.title.toLowerCase().includes(searchValue));
         }
-        setFilteredExpenses(filteredExpenses);
-        setIsFiltering(true);
-    }
 
-    const handleFilter = (e) => {
-        const selectedFilter = e.target.value;
-        e.target.value = selectedFilter;
-        if (selectedFilter === "All") {
-            setFilteredExpenses([]);
-            setIsFiltering(false);
-            return;
+        if (appliedFilter.category && appliedFilter.category !== "All") {
+            updated = updated.filter(expense => expense.category === appliedFilter.category);
         }
-        setIsFiltering(true);
-        setFilteredExpenses(expenses.filter(expense => expense.category === selectedFilter));
-        console.log(selectedFilter);
-    }
+
+        if (appliedFilter.sort) {
+            if (appliedFilter.sort === "" || appliedFilter.sort === "Sort by Date: Descending") {
+                updated = [...updated].sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else {
+                updated = [...updated].sort((a, b) => {
+                    if (appliedFilter.sort === "Sort by Date: Ascending") {
+                        return new Date(a.date) - new Date(b.date);
+                    } else if (appliedFilter.sort === "Sort by Amount: (Low to high)") {
+                        return a.amount - b.amount;
+                    } else if (appliedFilter.sort === "Sort by Amount: (High to low)") {
+                        return b.amount - a.amount;
+                    }
+                });
+            }
+
+        }
+
+        setFilteredExpenses(updated);
+        setIsFiltering(appliedFilter.search !== "" || (appliedFilter.category && appliedFilter.category !== "All") || (appliedFilter.sort && appliedFilter.sort !== "Sort by Date: Descending"));
+    }, [appliedFilter.category, appliedFilter.search, appliedFilter.sort, expenses])
+
+    useEffect(() => {
+        setExpenses((expenses) => { expenses.sort((a, b) => new Date(b.date) - new Date(a.date)); return expenses })
+    }, [expenses])
 
     const handleOpenModal = () => {
         setIsOpenModal(true);
@@ -53,30 +70,12 @@ const Home = () => {
         setSelectedIds([]);
     }
 
-    const handleSort = (e) => {
-        console.log(e.target.value);
-        const expensesToSort = isFiltering ? filteredExpenses : expenses;
-        console.log(expensesToSort);
-        const selectedSort = e.target.value;
-        e.target.value = selectedSort;
-        let sortedExpenses = [];
-        if (selectedSort === "Sort by Date: Ascending") {
-            sortedExpenses = [...expensesToSort].sort((a, b) => new Date(a.date) - new Date(b.date));
-        } else if (selectedSort === "Sort by Date: Descending") {
-            sortedExpenses = [...expensesToSort].sort((a, b) => new Date(b.date) - new Date(a.date));
-        } else if (selectedSort === "Sort by Amount: (Low to high)") {
-            sortedExpenses = [...expensesToSort].sort((a, b) => a.amount - b.amount);
-        } else if (selectedSort === "Sort by Amount: (High to low)") {
-            sortedExpenses = [...expensesToSort].sort((a, b) => b.amount - a.amount);
-        }
-        console.log(sortedExpenses);
-        setFilteredExpenses(sortedExpenses);
-        setIsFiltering(true);
-    };
-
     const handleClearFilters = () => {
-        setIsFiltering(false);
-        setFilteredExpenses([]);
+        setAppliedFilter({
+            search: "",
+            category: "All",
+            sort: "Sort by Date: Descending"
+        });
     }
 
 
@@ -85,10 +84,10 @@ const Home = () => {
             <div className={styles["container"]}>
                 <div className={styles["container__header"]}>
                     <div className={styles["container__header--left"]}>
-                        <Input placeholder="Search expenses" onChange={handleSearch} rightIcon={<Search color='#bababa' strokeWidth={1.5} />} variant="search" />
-                        <Select options={["All", ...filters]} onChange={handleFilter} />
-                        <Select options={["Sort by Date: Ascending", "Sort by Date: Descending", "Sort by Amount: (Low to high)", "Sort by Amount: (High to low)"]} onChange={handleSort} />
-                        {isFiltering && <Button text="Clear Filters" onClick={handleClearFilters} variant='clear' icon={<X/>} />}
+                        <Input placeholder="Search expenses" value={appliedFilter.search} onChange={(e) => { console.log(e); setAppliedFilter((prev) => ({ ...prev, search: e.target.value })) }} rightIcon={<Search color='#bababa' strokeWidth={1.5} />} variant="search" />
+                        <Select options={["All", ...filters]} value={appliedFilter.category} onChange={(e) => { setAppliedFilter((prev) => ({ ...prev, category: e.target.value })) }} />
+                        <Select options={["Sort by Date: Descending", "Sort by Date: Ascending", "Sort by Amount: (Low to high)", "Sort by Amount: (High to low)"]} value={appliedFilter.sort} onChange={(e) => { setAppliedFilter((prev) => ({ ...prev, sort: e.target.value })) }} />
+                        {isFiltering && <Button text="Clear Filters" onClick={handleClearFilters} variant='clear' icon={<X />} />}
                     </div>
                     <div className={styles["container__header--right"]}>
                         <Button text="Add Expense" icon={<Plus size={18} />} onClick={() => setIsOpenModal(true)} variant='add' />
