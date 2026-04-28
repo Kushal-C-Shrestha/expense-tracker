@@ -9,8 +9,8 @@ export const navItems = [
     },
     {
         id: 2,
-        name: "Settings",
-        path: "/settings",
-        icon: Settings
+        name: "Expenses",
+        path: "/expenses",
+        icon: CircleDollarSign
     }
 ];
