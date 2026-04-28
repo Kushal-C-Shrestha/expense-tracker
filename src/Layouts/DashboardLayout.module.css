@@ -1,0 +1,22 @@
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-layout__left {
+  min-height: 100vh;
+  overflow: hidden;
+  min-width: 250px;
+  height: 100vh;
+}
+
+.dashboard-layout__right {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem 2rem;
+}
