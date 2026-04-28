@@ -1,0 +1,62 @@
+.stat-card {
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.stat-card__value {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-card__indicator {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.stat-card__icon {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: rgb(222, 240, 131);
+  border-radius: 6px;
+}
+
+.icon--red {
+  background-color: rgb(255, 200, 200);
+  color: red;
+}
+
+.icon--blue {
+  background-color: rgb(200, 200, 255);
+  color: blue;
+}
+
+.icon--green {
+  background-color: rgb(200, 255, 200);
+  color: green;
+}
+
+.icon--orange {
+  background-color: rgb(255, 200, 200);
+  color: orange;
+}
+
+.indicator__icon {
+  height: 12px;
+  width: 12px;
+}
+
+.indicator--up {
+  color: green;
+}
+
+.indicator--down {
+  color: red;
+}
