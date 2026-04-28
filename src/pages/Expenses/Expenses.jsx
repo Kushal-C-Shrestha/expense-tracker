@@ -5,7 +5,7 @@ import Button from '../../components/ui/Button/Button'
 import { Plus, Search, X } from 'lucide-react'
 import Input from '../../components/ui/Input/Input'
 import Select from '../../components/ui/Select/Select'
-import styles from "./Home.module.css"
+import styles from "./Expenses.module.css"
 import filters from '../../data/filters'
 import useLocalStorage from '../../hooks/useLocalStorage'
 import Modal from '../../components/ui/Modal/Modal'
