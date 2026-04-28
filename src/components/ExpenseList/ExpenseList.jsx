@@ -6,23 +6,13 @@ import Table from "../ui/Table/Table"
 import Button from "../ui/Button/Button"
 
 import { Pencil, Trash2 } from "lucide-react"
-import { set } from "zod"
 
-const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, setSelectedExpense, selectedExpense, handleOpenModal, selectedIds, setSelectedIds }) => {
+const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, setSelectedExpense, selectedExpense, handleOpenModal, selectedIds, setSelectedIds, toggleDeleteModal }) => {
     const data = isFiltering ? filteredExpenses : expenses
 
     const [isDisabled, setIsDisabled] = useState(false)
 
-    const handleDelete = (id) => {
-        if (selectedIds.length > 1) {
-            console.log("Delete multiple expenses", selectedIds)
-            setExpenses(prevExpenses => prevExpenses.filter(e => !(selectedIds.includes(e.id))));
-            setSelectedIds([])
-            return
-        }
-        setExpenses(prevExpenses => prevExpenses.filter(e => e.id !== id));
-        setSelectedIds([]);
-    }
+    
     const handleEdit = (id) => {
         setSelectedExpense(data.find(e => e.id === id));
         handleOpenModal();
@@ -80,18 +70,20 @@ const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, set
         { key: "select", label: "", width: "40px", render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} />, headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === data.length && data.length > 0} /> },
         { key: "title", label: "Title", width: "40%" },
         { key: "date", label: "Date", width: "20%", render: (row) => new Date(row.date).toLocaleDateString() },
-        { key: "category", label: "Category", width: "20%", render: (row) => <div className="pill__container">
-            <div className={`${styles["category__pill"]} ${styles[`category__pill--${mapCategoryToColor(row.category)}`]}`}>{row.category}</div>
-        </div> },
+        {
+            key: "category", label: "Category", width: "20%", render: (row) => <div className="pill__container">
+                <div className={`${styles["category__pill"]} ${styles[`category__pill--${mapCategoryToColor(row.category)}`]}`}>{row.category}</div>
+            </div>
+        },
         { key: "amount", label: "Amount", width: "20%" },
         {
             key: "actions", label: "Actions", width: "10%", render: (row) => {
                 return (
                     <div style={{ display: 'flex', gap: '1rem' }}>
-                        <Button variant="edit" icon={<Pencil size={16} onClick={() => handleEdit(row.id)} />} disabled={isDisabled}>
+                        <Button variant="edit" icon={<Pencil size={16} />} onClick={() => handleEdit(row.id)} disabled={isDisabled}>
                             Edit
                         </Button>
-                        <Button variant="delete" icon={<Trash2 size={16} onClick={() => handleDelete(row.id)} />} >
+                        <Button variant="delete" icon={<Trash2 size={16} />} onClick={() => { setSelectedIds((prev) => prev.includes(row.id) ? prev : [...prev, row.id]); toggleDeleteModal() }}>
                             Delete
                         </Button>
                     </div>

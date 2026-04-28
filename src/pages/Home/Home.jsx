@@ -8,6 +8,7 @@ import Select from '../../components/ui/Select/Select'
 import styles from "./Home.module.css"
 import filters from '../../data/filters'
 import useLocalStorage from '../../hooks/useLocalStorage'
+import Modal from '../../components/ui/Modal/Modal'
 
 const Home = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
@@ -21,6 +22,7 @@ const Home = () => {
         category: "All",
         sort: ""
     });
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     useEffect(() => {
         console.log(appliedFilter);
@@ -78,6 +80,20 @@ const Home = () => {
         });
     }
 
+    const toggleDeleteModal = () => {
+        console.log("Toggling delete modal");
+        if (isDeleteModalOpen) {
+            setIsDeleteModalOpen(false);
+        } else {
+            setIsDeleteModalOpen(true);
+        }
+    }
+
+    const handleDelete = () => {
+        setExpenses(prevExpenses => prevExpenses.filter(e => !(selectedIds.includes(e.id))));
+        setSelectedIds([])
+        return
+    }
 
     return (
         <>
@@ -93,12 +109,36 @@ const Home = () => {
                         <Button text="Add Expense" icon={<Plus size={18} />} onClick={() => setIsOpenModal(true)} variant='add' />
                     </div>
                 </div>
-                <ExpenseList expenses={expenses} filteredExpenses={filteredExpenses} isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
+                <ExpenseList expenses={expenses} filteredExpenses={filteredExpenses} isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} />
                 {isOpenModal && (
                     <div className={styles["overlay"]} onClick={handleCloseModal}>
                         <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} setIsFiltering={setIsFiltering} />
                     </div>)
                 }
+                {isDeleteModalOpen && (
+                    <div className={styles["overlay"]} onClick={handleCloseModal} onClick={() => { toggleDeleteModal(); setSelectedIds([]) }}>
+                        <Modal title={"Confirm Delete"} footer={() => {
+                            return (<>
+                                <Button text="Cancel" variant="cancel" onClick={toggleDeleteModal} />
+                                <Button text="Delete" variant="danger" onClick={handleDelete} />
+                            </>)
+
+                        }} handleClose={toggleDeleteModal}>
+                            <p>Are you sure you want to delete the selected expenses? ({selectedIds.length})</p>
+                            <div>
+                                {selectedIds.map(id => {
+                                    const expense = expenses.find(e => e.id === id);
+                                    return (
+                                        <div key={id}>
+                                            <p>{expense.title} {expense.date} {expense.amount}</p>
+                                        </div>
+                                    )
+                                })
+                                }
+
+                            </div>
+                        </Modal>
+                    </div>)}
             </div>
 
         </>
