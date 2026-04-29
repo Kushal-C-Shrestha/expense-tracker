@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 
 import styles from "./ExpenseList.module.css"
 
@@ -7,12 +7,39 @@ import Button from "../ui/Button/Button"
 
 import { Pencil, Trash2 } from "lucide-react"
 
-const ExpenseList = ({ expenses, filteredExpenses, isFiltering, setExpenses, setSelectedExpense, selectedExpense, handleOpenModal, selectedIds, setSelectedIds, toggleDeleteModal }) => {
-    const data = isFiltering ? filteredExpenses : expenses
+const ExpenseList = ({ expenses, isFiltering, setExpenses, setSelectedExpense, selectedExpense, handleOpenModal, selectedIds, setSelectedIds, toggleDeleteModal, appliedFilter }) => {
 
+    const data = useMemo(() => {
+        let updated = [...expenses];
+
+        if (appliedFilter.search) {
+            const searchValue = appliedFilter.search.toLowerCase();
+            updated = expenses.filter(expense => expense.title.toLowerCase().includes(searchValue));
+        }
+
+        if (appliedFilter.category && appliedFilter.category !== "All") {
+            updated = updated.filter(expense => expense.category === appliedFilter.category);
+        }
+
+        if (appliedFilter.sort) {
+            updated = [...updated].sort((a, b) => {
+                if (appliedFilter.sort === "Sort by Date: Descending") {
+                    return new Date(b.date) - new Date(a.date);
+                } else if (appliedFilter.sort === "Sort by Date: Ascending") {
+                    return new Date(a.date) - new Date(b.date);
+                } else if (appliedFilter.sort === "Sort by Amount: (Low to high)") {
+                    return a.amount - b.amount;
+                } else if (appliedFilter.sort === "Sort by Amount: (High to low)") {
+                    return b.amount - a.amount;
+                }
+            });
+        }
+
+        return updated;
+    }, [expenses, appliedFilter])
     const [isDisabled, setIsDisabled] = useState(false)
 
-    
+
     const handleEdit = (id) => {
         setSelectedExpense(data.find(e => e.id === id));
         handleOpenModal();

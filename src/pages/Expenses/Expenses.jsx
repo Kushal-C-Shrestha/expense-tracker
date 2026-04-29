@@ -13,54 +13,17 @@ import Modal from '../../components/ui/Modal/Modal'
 const Home = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [expenses, setExpenses] = useLocalStorage("expenses", []);
-    const [isFiltering, setIsFiltering] = useState(false);
-    const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [selectedExpense, setSelectedExpense] = useState(null)
     const [selectedIds, setSelectedIds] = useState([])
     const [appliedFilter, setAppliedFilter] = useState({
         search: "",
         category: "All",
-        sort: ""
+        sort: "Sort by Date: Descending"
     });
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-    useEffect(() => {
-        console.log(appliedFilter);
-        let updated = [...expenses];
+    const isFiltering= appliedFilter.search !== "" || (appliedFilter.category && appliedFilter.category !== "All") || (appliedFilter.sort && appliedFilter.sort !== "Sort by Date: Descending");
 
-        if (appliedFilter.search) {
-            const searchValue = appliedFilter.search.toLowerCase();
-            updated = expenses.filter(expense => expense.title.toLowerCase().includes(searchValue));
-        }
-
-        if (appliedFilter.category && appliedFilter.category !== "All") {
-            updated = updated.filter(expense => expense.category === appliedFilter.category);
-        }
-
-        if (appliedFilter.sort) {
-            if (appliedFilter.sort === "" || appliedFilter.sort === "Sort by Date: Descending") {
-                updated = [...updated].sort((a, b) => new Date(b.date) - new Date(a.date));
-            } else {
-                updated = [...updated].sort((a, b) => {
-                    if (appliedFilter.sort === "Sort by Date: Ascending") {
-                        return new Date(a.date) - new Date(b.date);
-                    } else if (appliedFilter.sort === "Sort by Amount: (Low to high)") {
-                        return a.amount - b.amount;
-                    } else if (appliedFilter.sort === "Sort by Amount: (High to low)") {
-                        return b.amount - a.amount;
-                    }
-                });
-            }
-
-        }
-
-        setFilteredExpenses(updated);
-        setIsFiltering(appliedFilter.search !== "" || (appliedFilter.category && appliedFilter.category !== "All") || (appliedFilter.sort && appliedFilter.sort !== "Sort by Date: Descending"));
-    }, [appliedFilter.category, appliedFilter.search, appliedFilter.sort, expenses])
-
-    useEffect(() => {
-        setExpenses((expenses) => { expenses.sort((a, b) => new Date(b.date) - new Date(a.date)); return expenses })
-    }, [expenses])
 
     const handleOpenModal = () => {
         setIsOpenModal(true);
@@ -109,10 +72,10 @@ const Home = () => {
                         <Button text="Add Expense" icon={<Plus size={18} />} onClick={() => setIsOpenModal(true)} variant='add' />
                     </div>
                 </div>
-                <ExpenseList expenses={expenses} filteredExpenses={filteredExpenses} isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} />
+                <ExpenseList expenses={expenses}  isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} />
                 {isOpenModal && (
                     <div className={styles["overlay"]} onClick={handleCloseModal}>
-                        <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} setIsFiltering={setIsFiltering} />
+                        <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense}  />
                     </div>)
                 }
                 {isDeleteModalOpen && (

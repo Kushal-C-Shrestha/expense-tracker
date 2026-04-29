@@ -16,7 +16,7 @@ import filters from "../../data/filters";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 
-function ExpenseForm({ setExpenses, handleCloseModal, filters, selectedExpense = { title: "", amount: "", date: "", category: "" }, setSelectedExpense, setIsFiltering }) {
+function ExpenseForm({ setExpenses, handleCloseModal, filters, selectedExpense = { title: "", amount: "", date: "", category: "" }, setSelectedExpense }) {
     const { register, handleSubmit, reset, formState: { errors }, watch, } = useForm({ resolver: zodResolver(expenseSchema), defaultValues: selectedExpense });
 
 
@@ -29,7 +29,6 @@ function ExpenseForm({ setExpenses, handleCloseModal, filters, selectedExpense =
         setExpenses(prevExpenses => prevExpenses.map(e => e.id === selectedExpense.id ? { ...data, id: selectedExpense.id } : e));
         setSelectedExpense(null);
         handleClose();
-        setIsFiltering(false);
         return;
     }
 
@@ -43,7 +42,6 @@ function ExpenseForm({ setExpenses, handleCloseModal, filters, selectedExpense =
 
         setExpenses(prevExpenses => [...prevExpenses, { ...data, id: Date.now() }]);
         handleClose();
-        setIsFiltering(false);
         return
     };
 
