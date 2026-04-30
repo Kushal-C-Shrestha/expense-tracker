@@ -7,12 +7,11 @@ import Input from '../../components/ui/Input/Input'
 import Select from '../../components/ui/Select/Select'
 import styles from "./Expenses.module.css"
 import filters from '../../data/filters'
-import useLocalStorage from '../../hooks/useLocalStorage'
 import Modal from '../../components/ui/Modal/Modal'
 
 const Home = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [expenses, setExpenses] = useLocalStorage("expenses", []);
+    const [expenses, setExpenses] = useState([]);
     const [selectedExpense, setSelectedExpense] = useState(null)
     const [selectedIds, setSelectedIds] = useState([])
     const [appliedFilter, setAppliedFilter] = useState({
@@ -22,7 +21,7 @@ const Home = () => {
     });
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-    const isFiltering= appliedFilter.search !== "" || (appliedFilter.category && appliedFilter.category !== "All") || (appliedFilter.sort && appliedFilter.sort !== "Sort by Date: Descending");
+    const isFiltering = appliedFilter.search !== "" || (appliedFilter.category && appliedFilter.category !== "All") || (appliedFilter.sort && appliedFilter.sort !== "Sort by Date: Descending");
 
 
     const handleOpenModal = () => {
@@ -52,11 +51,42 @@ const Home = () => {
         }
     }
 
-    const handleDelete = () => {
+    const handleDelete =async () => {
+        try {
+            const response = await Promise.all(selectedIds.map(id => {
+                return fetch(`http://localhost:3000/expenses/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+            }));
+            if (!response.ok) {
+                throw new Error("Failed to delete expenses");
+            }
+        } catch (error) {
+            console.error("Error deleting expenses:", error);
+        }
         setExpenses(prevExpenses => prevExpenses.filter(e => !(selectedIds.includes(e.id))));
         setSelectedIds([])
         return
     }
+
+    useEffect(() => {
+        const fetchExpenses = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/expenses");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch expenses");
+                }
+                const data = await response.json();
+                setExpenses(data);
+            } catch (error) {
+                console.error("Error fetching expenses:", error);
+            }
+        };
+        fetchExpenses();
+    }, [])
 
     return (
         <>
@@ -72,10 +102,10 @@ const Home = () => {
                         <Button text="Add Expense" icon={<Plus size={18} />} onClick={() => setIsOpenModal(true)} variant='add' />
                     </div>
                 </div>
-                <ExpenseList expenses={expenses}  isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} />
+                <ExpenseList expenses={expenses} isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} />
                 {isOpenModal && (
                     <div className={styles["overlay"]} onClick={handleCloseModal}>
-                        <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense}  />
+                        <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} />
                     </div>)
                 }
                 {isDeleteModalOpen && (
