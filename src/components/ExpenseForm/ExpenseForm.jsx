@@ -15,12 +15,12 @@ import filters from "../../data/filters";
 
 import { v4 as uuidv4 } from "uuid";
 
-function ExpenseForm({ setExpenses, handleCloseModal, filters, selectedExpense = { id: "", title: "", amount: "", date: "", category: "" }, setSelectedExpense }) {
+function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = { id: "", title: "", amount: "", date: "", category: "" }, setSelectedExpense }) {
     const { register, handleSubmit, reset, formState: { errors }, watch, } = useForm({ resolver: zodResolver(expenseSchema), defaultValues: selectedExpense });
 
     const handleClose = () => {
         reset();
-        handleCloseModal();
+        toggleFormModal();
     }
 
     const handleEdit = async (data) => {

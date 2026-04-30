@@ -23,15 +23,13 @@ const Home = () => {
 
     const isFiltering = appliedFilter.search !== "" || (appliedFilter.category && appliedFilter.category !== "All") || (appliedFilter.sort && appliedFilter.sort !== "Sort by Date: Descending");
 
-
-    const handleOpenModal = () => {
-        setIsOpenModal(true);
-    }
-
-    const handleCloseModal = () => {
-        setIsOpenModal(false);
-        setSelectedExpense(null);
-        setSelectedIds([]);
+    const toggleFormModal = () => {
+        if (isOpenModal) {
+            setIsOpenModal(false);
+            setSelectedExpense(null);
+        } else {
+            setIsOpenModal(true);
+        }
     }
 
     const handleClearFilters = () => {
@@ -102,14 +100,14 @@ const Home = () => {
                         <Button text="Add Expense" icon={<Plus size={18} />} onClick={() => setIsOpenModal(true)} variant='add' />
                     </div>
                 </div>
-                <ExpenseList expenses={expenses} isFiltering={isFiltering} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} handleOpenModal={handleOpenModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} />
+                <ExpenseList expenses={expenses} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} toggleFormModal={toggleFormModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} isLoading={isLoading} />
                 {isOpenModal && (
-                    <div className={styles["overlay"]} onClick={handleCloseModal}>
-                        <ExpenseForm handleCloseModal={handleCloseModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} />
+                    <div className={styles["overlay"]} onClick={toggleFormModal}>
+                        <ExpenseForm toggleFormModal={toggleFormModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} />
                     </div>)
                 }
                 {isDeleteModalOpen && (
-                    <div className={styles["overlay"]} onClick={handleCloseModal} onClick={() => { toggleDeleteModal(); setSelectedIds([]) }}>
+                    <div className={styles["overlay"]} onClick={toggleFormModal} onClick={() => { toggleDeleteModal(); setSelectedIds([]) }}>
                         <Modal title={"Confirm Delete"} footer={() => {
                             return (<>
                                 <Button text="Cancel" variant="cancel" onClick={toggleDeleteModal} />

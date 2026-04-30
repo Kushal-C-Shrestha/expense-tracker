@@ -7,7 +7,7 @@ import Button from "../ui/Button/Button"
 
 import { Pencil, Trash2 } from "lucide-react"
 
-const ExpenseList = ({ expenses, isFiltering, setExpenses, setSelectedExpense, selectedExpense, handleOpenModal, selectedIds, setSelectedIds, toggleDeleteModal, appliedFilter }) => {
+const ExpenseList = ({ expenses, setExpenses, setSelectedExpense, toggleFormModal, selectedIds, setSelectedIds, toggleDeleteModal, appliedFilter, isLoading }) => {
 
     const data = useMemo(() => {
         let updated = [...expenses];
@@ -42,7 +42,7 @@ const ExpenseList = ({ expenses, isFiltering, setExpenses, setSelectedExpense, s
 
     const handleEdit = (id) => {
         setSelectedExpense(data.find(e => e.id === id));
-        handleOpenModal();
+        toggleFormModal();
     }
 
     const handleSelect = (id) => {
