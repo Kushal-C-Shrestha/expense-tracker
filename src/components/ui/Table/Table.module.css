@@ -26,3 +26,10 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.table__skeleton {
+  width: 100%;
+  background-color: rgba(170, 170, 170,0.15);
+  height: 24px;
+  border-radius: 2px;
+}
