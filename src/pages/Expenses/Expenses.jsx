@@ -7,6 +7,7 @@ import Input from '../../components/ui/Input/Input'
 import Select from '../../components/ui/Select/Select'
 import styles from "./Expenses.module.css"
 import filters from '../../data/filters'
+import Pagination from '../../components/ui/Pagination/Pagination'
 import Modal from '../../components/ui/Modal/Modal'
 
 const Home = () => {
@@ -48,6 +49,14 @@ const Home = () => {
             setIsDeleteModalOpen(true);
         }
     }
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
+    const handlePageChange = (page) => {
+        console.log(page);
+        setCurrentPage(page);
+    };
 
     const handleDelete =async () => {
         try {
@@ -101,6 +110,9 @@ const Home = () => {
                     </div>
                 </div>
                 <ExpenseList expenses={expenses} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} toggleFormModal={toggleFormModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} isLoading={isLoading} />
+                {!isLoading && (
+                    <Pagination pages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange} />
+                )}
                 {isOpenModal && (
                     <div className={styles["overlay"]} onClick={toggleFormModal}>
                         <ExpenseForm toggleFormModal={toggleFormModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} />
