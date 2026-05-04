@@ -1,0 +1,50 @@
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+}
+
+.expense-list__header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 1rem;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+}
+
+.category__pill {
+  width: fit-content;
+  padding: 0.25rem 0.5rem;
+  font-size: 12px;
+  border-radius: 100px;
+}
+
+.category__pill--red {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.category__pill--blue {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.category__pill--green {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.category__pill--gray {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.category__pill--orange {
+  background-color: #ffedd5;
+  color: #c2410c;
+}
+
+.category__pill--purple {
+  background-color: #f3e8ff;
+  color: #6b21a8;
+}

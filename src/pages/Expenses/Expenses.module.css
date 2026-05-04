@@ -10,3 +10,14 @@
   align-items: center;
 }
 
+.container__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.container__header--left {
+  display: flex;
+  gap: 8px;
+}

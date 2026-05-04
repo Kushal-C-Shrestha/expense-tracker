@@ -9,12 +9,17 @@
 }
 
 .button:disabled {
-  background-color: rgb(165, 165, 165);
+  color: rgb(165, 165, 165);
   cursor: not-allowed;
 }
 
 .button--save {
   background-color: #4caf50;
+  color: white;
+}
+
+.button--save:disabled {
+  background-color: rgb(199, 199, 199);
   color: white;
 }
 
@@ -25,7 +30,7 @@
 }
 
 .button--add {
-  background-color: #007bff;
+  background-color: #0d4c90;
   color: white;
 }
 
@@ -39,4 +44,15 @@
   padding: 0;
   background-color: transparent;
   color: blue;
+}
+
+.button--clear {
+  background-color: transparent;
+  color: var(--tech-blue);
+  border: 1px solid var(--tech-blue);
+}
+
+.button--danger{
+  background-color: #f44336;
+  color: white;
 }

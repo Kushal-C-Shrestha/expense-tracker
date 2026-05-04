@@ -1,0 +1,32 @@
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: #eaf2ff;
+  height: 100%;
+}
+
+.nav-header {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+  color: #475569;
+  margin-bottom: 0.25rem;
+  border-radius: 8px;
+}
+
+.nav-item--active {
+  background-color: #bfdbfe;
+  color: #2563eb;
+}
