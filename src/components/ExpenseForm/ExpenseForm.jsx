@@ -14,71 +14,49 @@ import Loader from "../ui/Loader/Loader";
 import filters from "../../data/filters";
 import TextArea from "../ui/TextArea/TextArea";
 
-import { v4 as uuidv4 } from "uuid";
+import { addExpense, editExpense } from "../../services/expenses.services";
 
-function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = { id: "", title: "", amount: "", date: "", category: "" }, setSelectedExpense }) {
+import { v4 as uuidv4 } from "uuid";
+import useFetch from "../../hooks/useFetch";
+import useMutation from "../../hooks/useMutation";
+
+function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = { id: "", title: "", amount: "", date: "", category: "" }, setSelectedExpense, refetch, setSelectedIds }) {
     const { register, handleSubmit, reset, formState: { errors, isSubmitting }, watch, } = useForm({ resolver: zodResolver(expenseSchema), defaultValues: selectedExpense });
-    
+    const { data: addData, error: addError, loading: addLoading, executeMutation: mutateAdd } = useMutation({ fn: (expense) => addExpense(expense) });
+    const { data: editData, error: editError, loading: editLoading, executeMutation: mutateEdit } = useMutation({ fn: (expense) => editExpense(expense) });
 
     const handleClose = () => {
         reset();
         toggleFormModal();
     }
 
-    const handleEdit = async (data) => {
-        console.log("Editing expense:", data);
-        try {
-            const response = await fetch(`http://localhost:3000/expenses/${data.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ ...data, id: data.id })
-            });
-            if (!response.ok) {
-                throw new Error("Failed to edit expense");
-            }
-            const updatedExpense = await response.json();
-            setExpenses(prevExpenses => prevExpenses.map(e => e.id === data.id ? updatedExpense : e));
-            setSelectedExpense(null);
-            handleClose();
-        } catch (error) {
-            console.error("Error editing expense:", error);
-        }
-    }
-
     const onSubmit = async (data) => {
-        console.log(selectedExpense);
-        console.log(data);
         if (selectedExpense && selectedExpense.id) {
             await handleEdit(data);
             return;
         }
-
         await handleAdd(data);
-        handleClose();
         return
     };
 
     const handleAdd = async (data) => {
-        console.log("Adding expense:", data);
         const id = uuidv4();
         let expense = { ...data, id };
-        try {
-            const response = await fetch("http://localhost:3000/expenses", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(expense)
-            });
-            if (!response.ok) {
-                throw new Error("Failed to add expense");
-            }
-            const newExpense = await response.json();
-            setExpenses(prevExpenses => [...prevExpenses, newExpense]);
-        } catch (error) {
-            console.error("Error adding expense:", error);
+        await mutateAdd(expense);
+        await refetch();
+        if (!addError) {
+            toggleFormModal();
+        }
+    }
+
+    const handleEdit = async (data) => {
+        const expense = { ...data, id: selectedExpense.id };
+        await mutateEdit(expense);
+        await refetch();
+        if (!editError) {
+            toggleFormModal();
+            setSelectedExpense(null);
+            setSelectedIds([]);
         }
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import ExpenseForm from "../../components/ExpenseForm/ExpenseForm"
 import ExpenseList from "../../components/ExpenseList/ExpenseList"
 import Button from '../../components/ui/Button/Button'
@@ -7,12 +7,14 @@ import Input from '../../components/ui/Input/Input'
 import Select from '../../components/ui/Select/Select'
 import styles from "./Expenses.module.css"
 import filters from '../../data/filters'
-import Pagination from '../../components/ui/Pagination/Pagination'
 import Modal from '../../components/ui/Modal/Modal'
+import Pagination from '../../components/ui/Pagination/Pagination'
+import useFetch from '../../hooks/useFetch'
+import { fetchExpenses, addExpense, deleteExpenses } from '../../services/expenses.services'
+import useMutation from '../../hooks/useMutation'
 
 const Home = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [expenses, setExpenses] = useState([]);
     const [selectedExpense, setSelectedExpense] = useState(null)
     const [selectedIds, setSelectedIds] = useState([])
     const [appliedFilter, setAppliedFilter] = useState({
@@ -21,8 +23,27 @@ const Home = () => {
         sort: "Sort by Date: Descending"
     });
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
     const isFiltering = appliedFilter.search !== "" || (appliedFilter.category && appliedFilter.category !== "All") || (appliedFilter.sort && appliedFilter.sort !== "Sort by Date: Descending");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
+    // Fetching expenses with useFetch hook
+    const fetchData = useCallback(() => {
+        return fetchExpenses(currentPage, itemsPerPage)
+    }, [currentPage, itemsPerPage]);
+    const { data, setData, loading: isLoading, error, refetch } = useFetch({ fn: fetchData });
+    const expenses = data?.data || [];
+    const totalPages = data?.pages;
+
+    // Mutation hook for deleting expenses
+    const { loading: isDeleting, error: deleteError, executeMutation: mutateDelete } = useMutation({ fn: (selectedIds) => deleteExpenses(selectedIds) });
+    const handleDelete = async () => {
+        await mutateDelete(selectedIds);
+        setSelectedIds([]);
+        toggleDeleteModal();
+        await refetch();
+        return;
+    }
 
     const toggleFormModal = () => {
         if (isOpenModal) {
@@ -50,50 +71,10 @@ const Home = () => {
         }
     }
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
-
     const handlePageChange = (page) => {
         console.log(page);
         setCurrentPage(page);
     };
-
-    const handleDelete =async () => {
-        try {
-            const response = await Promise.all(selectedIds.map(id => {
-                return fetch(`http://localhost:3000/expenses/${id}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
-            }));
-            if (!response.ok) {
-                throw new Error("Failed to delete expenses");
-            }
-        } catch (error) {
-            console.error("Error deleting expenses:", error);
-        }
-        setExpenses(prevExpenses => prevExpenses.filter(e => !(selectedIds.includes(e.id))));
-        setSelectedIds([])
-        return
-    }
-
-    useEffect(() => {
-        const fetchExpenses = async () => {
-            try {
-                const response = await fetch("http://localhost:3000/expenses");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch expenses");
-                }
-                const data = await response.json();
-                setExpenses(data);
-            } catch (error) {
-                console.error("Error fetching expenses:", error);
-            }
-        };
-        fetchExpenses();
-    }, [])
 
     return (
         <>
@@ -109,13 +90,13 @@ const Home = () => {
                         <Button text="Add Expense" icon={<Plus size={18} />} onClick={() => setIsOpenModal(true)} variant='add' />
                     </div>
                 </div>
-                <ExpenseList expenses={expenses} setExpenses={setExpenses} setSelectedExpense={setSelectedExpense} toggleFormModal={toggleFormModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} isLoading={isLoading} />
+                <ExpenseList expenses={expenses} setSelectedExpense={setSelectedExpense} toggleFormModal={toggleFormModal} selectedIds={selectedIds} setSelectedIds={setSelectedIds} toggleDeleteModal={toggleDeleteModal} appliedFilter={appliedFilter} isLoading={isLoading} />
                 {!isLoading && (
                     <Pagination pages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange} />
                 )}
                 {isOpenModal && (
                     <div className={styles["overlay"]} onClick={toggleFormModal}>
-                        <ExpenseForm toggleFormModal={toggleFormModal} setExpenses={setExpenses} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} />
+                        <ExpenseForm toggleFormModal={toggleFormModal} setData={setData} filters={filters} selectedExpense={selectedExpense} setSelectedExpense={setSelectedExpense} refetch={refetch} setSelectedIds={setSelectedIds} />
                     </div>)
                 }
                 {isDeleteModalOpen && (
