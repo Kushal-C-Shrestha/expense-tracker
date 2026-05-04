@@ -12,6 +12,7 @@ import styles from "./ExpenseForm.module.css"
 import Modal from "../ui/Modal/Modal";
 
 import filters from "../../data/filters";
+import TextArea from "../ui/TextArea/TextArea";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -109,6 +110,11 @@ function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = 
                         </InputGroup>
                         <InputGroup label="Category" errors={errors} name="category" className={styles["form__group"]}>
                             <Select options={filters}  {...register("category")} />
+                        </InputGroup>
+                    </div>
+                    <div className={styles["form__row"]}>
+                        <InputGroup label="Description" errors={errors} name="description" className={styles["form__group"]}>
+                            <TextArea  {...register("description")} placeholder="Enter expense description" disabled={isSubmitting} />
                         </InputGroup>
                     </div>
                 </Modal>
