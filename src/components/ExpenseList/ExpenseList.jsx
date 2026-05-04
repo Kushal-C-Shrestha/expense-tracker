@@ -7,11 +7,10 @@ import Button from "../ui/Button/Button"
 
 import { Pencil, Trash2 } from "lucide-react"
 
-const ExpenseList = ({ expenses, setExpenses, setSelectedExpense, toggleFormModal, selectedIds, setSelectedIds, toggleDeleteModal, appliedFilter, isLoading }) => {
+const ExpenseList = ({ expenses, setSelectedExpense, toggleFormModal, selectedIds, setSelectedIds, toggleDeleteModal, appliedFilter, isLoading }) => {
 
     const data = useMemo(() => {
         let updated = [...expenses];
-
         if (appliedFilter.search) {
             const searchValue = appliedFilter.search.toLowerCase();
             updated = expenses.filter(expense => expense.title.toLowerCase().includes(searchValue));
@@ -94,7 +93,11 @@ const ExpenseList = ({ expenses, setExpenses, setSelectedExpense, toggleFormModa
     }
 
     const columns = [
-        { key: "select", label: "", width: "40px", render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} />, headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === data.length && data.length > 0} /> },
+        {
+            key: "select", label: "", width: "40px",
+            render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} />,
+            headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === data.length && data.length > 0} />
+        },
         { key: "title", label: "Title", width: "40%" },
         { key: "date", label: "Date", width: "20%", render: (row) => new Date(row.date).toLocaleDateString() },
         {
