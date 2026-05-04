@@ -10,14 +10,15 @@ import Button from "../ui/Button/Button";
 import InputGroup from "../InputGroup";
 import styles from "./ExpenseForm.module.css"
 import Modal from "../ui/Modal/Modal";
-
+import Loader from "../ui/Loader/Loader";
 import filters from "../../data/filters";
 import TextArea from "../ui/TextArea/TextArea";
 
 import { v4 as uuidv4 } from "uuid";
 
 function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = { id: "", title: "", amount: "", date: "", category: "" }, setSelectedExpense }) {
-    const { register, handleSubmit, reset, formState: { errors }, watch, } = useForm({ resolver: zodResolver(expenseSchema), defaultValues: selectedExpense });
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting }, watch, } = useForm({ resolver: zodResolver(expenseSchema), defaultValues: selectedExpense });
+    
 
     const handleClose = () => {
         reset();
@@ -92,21 +93,21 @@ function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = 
                 <Modal title={selectedExpense ? "Edit Expense" : "Add Expense"} handleClose={handleClose} footer={() => {
                     return (<>
                         <Button text="Cancel" type="button" onClick={handleClose} variant="cancel" icon={<X />} />
-                        <Button text="Save" type="submit" icon={<Check />} variant="save" disabled={!title || !amount || !date || !category} />
+                        <Button text="Save" type="submit" icon={isSubmitting ? <Loader /> : <Check />} variant="save" disabled={!title || !amount || !date || !category} />
                     </>)
                 }} >
                     <div className={styles["form__row"]}>
                         <InputGroup label="Title" errors={errors} name="title" className={styles["form__group"]}>
-                            <Input   {...register("title")} placeholder="Enter expense title" />
+                            <Input   {...register("title")} placeholder="Enter expense title" disabled={isSubmitting} />
                         </InputGroup>
                         <InputGroup label="Amount" errors={errors} type="number" step="0.01" name="amount" className={styles["form__group"]} >
-                            <Input type="number" step="0.01"  {...register("amount")} placeholder="Enter amount" />
+                            <Input type="number" step="0.01"  {...register("amount")} placeholder="Enter amount" disabled={isSubmitting} />
                         </InputGroup>
                     </div>
 
                     <div className={styles["form__row"]}>
                         <InputGroup label="Date" errors={errors} type="date" name="date" className={styles["form__group"]}>
-                            <Input type="date" {...register("date")} />
+                            <Input type="date" {...register("date")} disabled={isSubmitting} />
                         </InputGroup>
                         <InputGroup label="Category" errors={errors} name="category" className={styles["form__group"]}>
                             <Select options={filters}  {...register("category")} />
