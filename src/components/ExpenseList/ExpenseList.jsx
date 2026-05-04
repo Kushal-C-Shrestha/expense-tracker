@@ -130,7 +130,7 @@ const ExpenseList = ({ expenses, setExpenses, setSelectedExpense, toggleFormModa
 
     return (
         <>
-            <Table columns={columns} data={data} className={styles.table} footer={footer} />
+            <Table columns={columns} data={data} className={styles.table} footer={footer} isLoading={isLoading} />
         </>
     )
 }

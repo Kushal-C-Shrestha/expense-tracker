@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './Table.module.css'
 
 
-const Table = ({ columns, data, footer }) => {
+const Table = ({ columns, data, footer, isLoading }) => {
     return (
         <div className={styles["table-wrapper"]}>
             <table className={styles.table}>
@@ -16,17 +16,33 @@ const Table = ({ columns, data, footer }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.length === 0 ? <tr><td colSpan={columns.length} className={styles["table__cell"]} style={{ textAlign: 'center' }}> No data found.</td></tr> : (
-                        data.map((row, rowIndex) => (
-                            <tr key={rowIndex} className={styles["table__row"]}>
-                                {columns.map((column) => (
-                                    <td key={column.key} className={styles["table__cell"]}>
-                                        {column.render ? column.render(row) : row[column.key]}
-                                    </td>
-                                ))}
+                    {isLoading ? (
+                        Array.from({ length: 5 }).map((_, index) => (
+                            <tr key={index} className={styles["table__row"]}>
+                                {columns.map((column, index) => {
+                                    return (
+                                        <td key={index} className={styles["table__cell"]} >
+                                            <div className={styles["table__skeleton"]}>
+
+                                            </div>
+                                        </td>)
+                                })}
                             </tr>
                         ))
-                    )}
+                    ) :
+                        data.length === 0 ? <tr><td colSpan={columns.length} className={styles["table__cell"]} style={{ textAlign: 'center' }}> No data found.</td></tr> : (
+                            data.map((row, rowIndex) => (
+                                <tr key={rowIndex} className={styles["table__row"]}>
+                                    {columns.map((column) => (
+                                        <td key={column.key} className={styles["table__cell"]}>
+                                            {column.render ? column.render(row) : row[column.key]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        )
+                    }
+
                 </tbody>
                 <tfoot className={styles["table__footer"]}>
                     {footer && footer.columns && (
