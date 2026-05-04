@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ExpenseForm from "../../components/ExpenseForm/ExpenseForm"
 import ExpenseList from "../../components/ExpenseList/ExpenseList"
 import Button from '../../components/ui/Button/Button'
-import { Plus, Search, X } from 'lucide-react'
+import { Plus, Search, X, Trash2 } from 'lucide-react'
 import Input from '../../components/ui/Input/Input'
 import Select from '../../components/ui/Select/Select'
 import styles from "./Expenses.module.css"
@@ -110,8 +110,8 @@ const Home = () => {
                     <div className={styles["overlay"]} onClick={toggleFormModal} onClick={() => { toggleDeleteModal(); setSelectedIds([]) }}>
                         <Modal title={"Confirm Delete"} footer={() => {
                             return (<>
-                                <Button text="Cancel" variant="cancel" onClick={toggleDeleteModal} />
-                                <Button text="Delete" variant="danger" onClick={handleDelete} />
+                                <Button text="Cancel" variant="cancel" icon={<X />} onClick={toggleDeleteModal} />
+                                <Button text="Delete" variant="danger" icon={<Trash2 />} onClick={handleDelete} />
                             </>)
 
                         }} handleClose={toggleDeleteModal}>
