@@ -3,7 +3,7 @@ export const fetchExpenses = async (page, itemsPerPage, appliedFilter) => {
     let api = `http://localhost:3000/expenses?_page=${page}&_per_page=${itemsPerPage}`;
 
     if (appliedFilter?.search) {
-        api += `&title_like=${appliedFilter.search}`
+        api += `&title:contains=${appliedFilter.search}`
     }
     if (appliedFilter?.category && appliedFilter?.category !== "All") {
         api += `&category=${appliedFilter.category}`
