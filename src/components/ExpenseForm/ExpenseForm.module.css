@@ -17,3 +17,8 @@
   display: flex;
   gap: 24px;
 }
+
+.form__error{
+  color:red;
+  font-size:0.875rem;
+}

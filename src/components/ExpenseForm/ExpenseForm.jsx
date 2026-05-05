@@ -71,24 +71,28 @@ function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = 
                 <Modal title={selectedExpense ? "Edit Expense" : "Add Expense"} handleClose={handleClose} footer={() => {
                     return (<>
                         <Button text="Cancel" type="button" onClick={handleClose} variant="cancel" icon={<X />} />
-                        <Button text="Save" type="submit" icon={isSubmitting ? <Loader /> : <Check />} variant="save" disabled={!title || !amount || !date || !category} />
+                        <Button text="Save" type="submit" icon={isSubmitting ? <Loader /> : <Check />} variant="save" />
                     </>)
                 }} >
                     <div className={styles["form__row"]}>
                         <InputGroup label="Title" errors={errors} name="title" className={styles["form__group"]}>
                             <Input   {...register("title")} placeholder="Enter expense title" disabled={isSubmitting} />
+                            {errors.title && <p className={styles["form__error"]}>{errors.title.message}</p>}
                         </InputGroup>
                         <InputGroup label="Amount" errors={errors} type="number" step="0.01" name="amount" className={styles["form__group"]} >
                             <Input type="number" step="0.01"  {...register("amount")} placeholder="Enter amount" disabled={isSubmitting} />
+                            {errors.amount && <p className={styles["form__error"]}>{errors.amount.message}</p>}
                         </InputGroup>
                     </div>
 
                     <div className={styles["form__row"]}>
                         <InputGroup label="Date" errors={errors} type="date" name="date" className={styles["form__group"]}>
                             <Input type="date" {...register("date")} disabled={isSubmitting} />
+                            {errors.date && <p className={styles["form__error"]}>{errors.date.message}</p>}
                         </InputGroup>
                         <InputGroup label="Category" errors={errors} name="category" className={styles["form__group"]}>
                             <Select options={filters}  {...register("category")} />
+                            {errors.category && <p className={styles["form__error"]}>{errors.category.message}</p>}
                         </InputGroup>
                     </div>
                     <div className={styles["form__row"]}>
