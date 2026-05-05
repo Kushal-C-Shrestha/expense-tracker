@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 import useFetch from "../../hooks/useFetch";
 import useMutation from "../../hooks/useMutation";
 
-function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = { id: "", title: "", amount: "", date: "", category: "" }, setSelectedExpense, refetch, setSelectedIds }) {
+function ExpenseForm({ toggleFormModal, filters, selectedExpense = { id: "", title: "", amount: "", date: "", category: "" }, setSelectedExpense, refetch, setSelectedIds }) {
     const { register, handleSubmit, reset, formState: { errors, isSubmitting }, watch, } = useForm({ resolver: zodResolver(expenseSchema), defaultValues: selectedExpense });
     const { data: addData, error: addError, loading: addLoading, executeMutation: mutateAdd } = useMutation({ fn: (expense) => addExpense(expense) });
     const { data: editData, error: editError, loading: editLoading, executeMutation: mutateEdit } = useMutation({ fn: (expense) => editExpense(expense) });

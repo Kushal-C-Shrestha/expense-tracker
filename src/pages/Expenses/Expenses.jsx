@@ -100,7 +100,7 @@ const Expenses = () => {
                     </div>)
                 }
                 {isDeleteModalOpen && (
-                    <div className={styles["overlay"]} onClick={toggleFormModal} onClick={() => { toggleDeleteModal(); setSelectedIds([]) }}>
+                    <div className={styles["overlay"]} onClick={() => { toggleDeleteModal(); setSelectedIds([]) }}>
                         <Modal title={"Confirm Delete"} footer={() => {
                             return (<>
                                 <Button text="Cancel" variant="cancel" icon={<X />} onClick={toggleDeleteModal} />
