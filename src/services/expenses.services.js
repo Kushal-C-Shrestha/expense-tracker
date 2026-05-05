@@ -1,5 +1,23 @@
-export const fetchExpenses = async (page, itemsPerPage) => {
-    const response = await fetch(`http://localhost:3000/expenses?_page=${page}&_per_page=${itemsPerPage}`);
+export const fetchExpenses = async (page, itemsPerPage, appliedFilter) => {
+    console.log("Fetching expenses with filters:", appliedFilter);
+    let api = `http://localhost:3000/expenses?_page=${page}&_per_page=${itemsPerPage}`;
+
+    if (appliedFilter?.search) {
+        api += `&title_like=${appliedFilter.search}`
+    }
+    if (appliedFilter?.category && appliedFilter?.category !== "All") {
+        api += `&category=${appliedFilter.category}`
+    }
+    if (appliedFilter?.sort) {
+        const [sortField, sortOrder] = appliedFilter.sort.split(": ");
+        const sortKey = sortField === "Sort by Date" ? "date" : "amount";
+        const sortDirection = sortOrder === "Descending" || sortOrder === "(High to low)" ? "-" : "";
+        console.log("Sorting by:", `${sortDirection}${sortKey}`);
+        api += `&_sort=${sortDirection}${sortKey}`;
+        console.log("API after sorting:", api);
+    }
+
+    const response = await fetch(api);
     if (!response.ok) {
         throw new Error("Failed to fetch expenses");
     }
