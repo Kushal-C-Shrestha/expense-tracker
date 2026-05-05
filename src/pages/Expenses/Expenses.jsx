@@ -13,7 +13,7 @@ import useFetch from '../../hooks/useFetch'
 import { fetchExpenses, addExpense, deleteExpenses } from '../../services/expenses.services'
 import useMutation from '../../hooks/useMutation'
 
-const Home = () => {
+const Expenses = () => {
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [selectedExpense, setSelectedExpense] = useState(null)
     const [selectedIds, setSelectedIds] = useState([])
@@ -129,4 +129,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Expenses
