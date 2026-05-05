@@ -41,7 +41,7 @@ function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = 
 
     const handleAdd = async (data) => {
         const id = uuidv4();
-        let expense = { ...data, id };
+        let expense = { ...data, id, amount: Number(data.amount) };
         await mutateAdd(expense);
         await refetch();
         if (!addError) {
@@ -50,7 +50,7 @@ function ExpenseForm({ setExpenses, toggleFormModal, filters, selectedExpense = 
     }
 
     const handleEdit = async (data) => {
-        const expense = { ...data, id: selectedExpense.id };
+        const expense = { ...data, id: selectedExpense.id, amount: Number(data.amount) };
         await mutateEdit(expense);
         await refetch();
         if (!editError) {
