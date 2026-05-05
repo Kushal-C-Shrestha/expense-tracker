@@ -29,8 +29,8 @@ const Expenses = () => {
 
     // Fetching expenses with useFetch hook
     const fetchData = useCallback(() => {
-        return fetchExpenses(currentPage, itemsPerPage)
-    }, [currentPage, itemsPerPage]);
+        return fetchExpenses(currentPage, itemsPerPage, appliedFilter)
+    }, [currentPage, itemsPerPage, appliedFilter]);
     const { data, setData, loading: isLoading, error, refetch } = useFetch({ fn: fetchData });
     const expenses = data?.data || [];
     const totalPages = data?.pages;

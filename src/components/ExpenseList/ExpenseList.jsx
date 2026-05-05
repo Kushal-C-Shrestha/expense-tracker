@@ -9,38 +9,11 @@ import { Pencil, Trash2 } from "lucide-react"
 
 const ExpenseList = ({ expenses, setSelectedExpense, toggleFormModal, selectedIds, setSelectedIds, toggleDeleteModal, appliedFilter, isLoading }) => {
 
-    const data = useMemo(() => {
-        let updated = [...expenses];
-        if (appliedFilter.search) {
-            const searchValue = appliedFilter.search.toLowerCase();
-            updated = expenses.filter(expense => expense.title.toLowerCase().includes(searchValue));
-        }
-
-        if (appliedFilter.category && appliedFilter.category !== "All") {
-            updated = updated.filter(expense => expense.category === appliedFilter.category);
-        }
-
-        if (appliedFilter.sort) {
-            updated = [...updated].sort((a, b) => {
-                if (appliedFilter.sort === "Sort by Date: Descending") {
-                    return new Date(b.date) - new Date(a.date);
-                } else if (appliedFilter.sort === "Sort by Date: Ascending") {
-                    return new Date(a.date) - new Date(b.date);
-                } else if (appliedFilter.sort === "Sort by Amount: (Low to high)") {
-                    return a.amount - b.amount;
-                } else if (appliedFilter.sort === "Sort by Amount: (High to low)") {
-                    return b.amount - a.amount;
-                }
-            });
-        }
-
-        return updated;
-    }, [expenses, appliedFilter])
     const [isDisabled, setIsDisabled] = useState(false)
 
 
     const handleEdit = (id) => {
-        setSelectedExpense(data.find(e => e.id === id));
+        setSelectedExpense(expenses.find(e => e.id === id));
         toggleFormModal();
     }
 
@@ -55,10 +28,10 @@ const ExpenseList = ({ expenses, setSelectedExpense, toggleFormModal, selectedId
     }
 
     const handleSelectAll = () => {
-        if (selectedIds.length === data.length) {
+        if (selectedIds.length === expenses.length) {
             setSelectedIds([]);
         } else {
-            setSelectedIds(data.map(d => d.id));
+            setSelectedIds(expenses.map(e => e.id));
         }
     };
 
@@ -96,7 +69,7 @@ const ExpenseList = ({ expenses, setSelectedExpense, toggleFormModal, selectedId
         {
             key: "select", label: "", width: "40px",
             render: (row) => <input type="checkbox" onChange={() => handleSelect(row.id)} checked={selectedIds.includes(row.id)} />,
-            headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === data.length && data.length > 0} />
+            headerRender: () => <input type="checkbox" onChange={handleSelectAll} checked={selectedIds.length === expenses.length && expenses.length > 0} />
         },
         { key: "title", label: "Title", width: "40%" },
         { key: "date", label: "Date", width: "20%", render: (row) => new Date(row.date).toLocaleDateString() },
@@ -125,7 +98,7 @@ const ExpenseList = ({ expenses, setSelectedExpense, toggleFormModal, selectedId
     const footer = {
         columns: [
             { key: "total", label: "Total expenses:", colspan: "4" },
-            { key: "totalAmount", label: data.reduce((total, row) => total + Number(row.amount) || 0, 0), colspan: "2" }
+            { key: "totalAmount", label: expenses.reduce((total, row) => total + Number(row.amount) || 0, 0), colspan: "2" }
         ]
     }
 
@@ -133,7 +106,7 @@ const ExpenseList = ({ expenses, setSelectedExpense, toggleFormModal, selectedId
 
     return (
         <>
-            <Table columns={columns} data={data} className={styles.table} footer={footer} isLoading={isLoading} />
+            <Table columns={columns} data={expenses} className={styles.table} footer={footer} isLoading={isLoading} />
         </>
     )
 }
